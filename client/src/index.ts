@@ -1,0 +1,1 @@
+let abcd: string = 'Sylwek';
