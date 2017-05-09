@@ -1,7 +1,8 @@
 import { observable } from "mobx";
-import { OrganisationApi } from "./Api";
+import { OrganisationApi, TournamentApi } from "./Api";
 import Organisation from './models/Organisation';
 import Game from './models/Game';
+import Tournament from './models/Tournament';
 
 class Store {
     @observable
@@ -21,3 +22,18 @@ class Store {
 }
 
 export default new Store();
+
+class TournamentStore {
+    @observable
+    public activeTournaments: Array<Tournament>;
+
+    constructor() {
+        this.activeTournaments = [];
+        const tournamentApi = new TournamentApi();
+        tournamentApi.getActiveTournaments()
+            .then(t => this.activeTournaments = t);
+    }
+}
+
+const TournamentStoreObject = new TournamentStore();
+export { TournamentStoreObject as TournamentStore };

@@ -1,12 +1,25 @@
 import * as React from "react";
-import Organisations from "./Organisations"
-
-export interface HelloProps { compiler: string; framework: string; }
+import {observer} from 'mobx-react'
+import OrganisationList from "./OrganisationList"
+import TournamentList from './TournamentList';
+import { TournamentStore } from '../../Store';
+import { RouteComponentProps } from 'react-router-dom';
 
 // 'HelloProps' describes the shape of props.
 // State is never set so we use the 'undefined' type.
-export default class Hello extends React.Component<HelloProps, undefined> {
+@observer
+export default class Home extends React.Component<RouteComponentProps<{}>, undefined> {
     render() {
-        return (<div><Organisations/></div>);
+        return (
+            <div className="container-fluid">
+                <div className="row">
+                    <div className="col-md-6">
+                        <OrganisationList />
+                    </div>
+                    <div className="col-md-6">
+                        <TournamentList  tournaments={TournamentStore.activeTournaments}/>
+                    </div>
+                </div>                
+            </div>);
     }
 }
