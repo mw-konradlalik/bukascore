@@ -2,7 +2,7 @@ import * as React from "react";
 import {observer} from 'mobx-react'
 import OrganisationList from "./OrganisationList"
 import TournamentList from './TournamentList';
-import { TournamentStore } from '../../Store';
+import HomeStore from '../../Store';
 import { RouteComponentProps } from 'react-router-dom';
 
 // 'HelloProps' describes the shape of props.
@@ -17,7 +17,7 @@ export default class Home extends React.Component<RouteComponentProps<{}>, undef
                         <OrganisationList />
                     </div>
                     <div className="col-md-6">
-                        <TournamentList  tournaments={TournamentStore.activeTournaments}/>
+                        <TournamentList  tournaments={HomeStore.activeTournaments}/>
                     </div>
                 </div>                
             </div>);

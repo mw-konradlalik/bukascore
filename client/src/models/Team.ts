@@ -1,7 +1,7 @@
-export default class Team{
+export default class Team {
     constructor(
         public id: number,
         public name: string,
         public gameId: number
-    ){}
+    ) { }
 }
