@@ -1,7 +1,13 @@
 import * as React from 'react'
 import { Table } from 'react-bootstrap'
+import TeamResult from '../../models/TeamResult';
+import ScoreBoardItem from './ScoreBoardItem';
 
-const ResultTable = ({ }) => (
+interface ScoreBoardProps {
+    results: Array<TeamResult>;
+}
+
+const ScoreBoard : React.SFC<ScoreBoardProps> = ({ results }) => (
     <Table>
         <thead>
             <tr>
@@ -14,16 +20,9 @@ const ResultTable = ({ }) => (
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            {results.map((result, index) => <ScoreBoardItem index={index+1} result={result} key={result.team.id} />)}
         </tbody>
     </Table>
 );
 
-export default ResultTable;
+export default ScoreBoard;

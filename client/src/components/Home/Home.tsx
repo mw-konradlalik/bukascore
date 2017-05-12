@@ -1,14 +1,27 @@
 import * as React from "react";
-import {observer} from 'mobx-react'
+import { observer } from 'mobx-react'
 import OrganisationList from "./OrganisationList"
 import TournamentList from './TournamentList';
 import HomeStore from '../../Store';
-import { RouteComponentProps } from 'react-router-dom';
+import { HomeState } from '../../State';
+import { RouteComponentProps, Switch, Route } from 'react-router-dom';
 
 // 'HelloProps' describes the shape of props.
 // State is never set so we use the 'undefined' type.
 @observer
-export default class Home extends React.Component<RouteComponentProps<{}>, undefined> {
+class Home extends React.Component<RouteComponentProps<{ gameId?: string }>, undefined> {
+    private _homeState: HomeState = new HomeState();
+
+    componentDidMount() {
+        this._homeState.setGame(parseInt(this.props.match.params.gameId));
+    }
+
+    componentWillReceiveProps(newProps: RouteComponentProps<{ gameId?: string }>) {
+        if (newProps.match.params.gameId !== this.props.match.params.gameId) {
+            this._homeState.setGame(parseInt(newProps.match.params.gameId));
+        }
+    }
+
     render() {
         return (
             <div className="container-fluid">
@@ -17,9 +30,18 @@ export default class Home extends React.Component<RouteComponentProps<{}>, undef
                         <OrganisationList />
                     </div>
                     <div className="col-md-6">
-                        <TournamentList  tournaments={HomeStore.activeTournaments}/>
+                        <TournamentList tournaments={this._homeState.tournaments} header={this._homeState.tournamentListHeader} />
                     </div>
-                </div>                
+                </div>
             </div>);
     }
 }
+
+const HomeRoute: React.SFC<RouteComponentProps<{}>> = ({ match }) => (
+    <Switch>
+        <Route exact path="/" component={Home}></Route>
+        <Route exact path={`/home/:gameId`} component={Home}></Route>
+    </Switch>
+)
+
+export default HomeRoute;

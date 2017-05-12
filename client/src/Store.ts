@@ -1,10 +1,11 @@
-import { observable, computed, autorun, action } from "mobx";
+import { observable, computed, autorun, action, whyRun } from "mobx";
 import { OrganisationApi, TournamentApi, MatchApi, TeamApi } from "./Api";
 import Organisation from './models/Organisation';
 import Game from './models/Game';
 import Tournament from './models/Tournament';
 import Match from './models/Match';
 import Team from './models/Team';
+import TeamResult from './models/TeamResult';
 
 class Store {
     @observable
@@ -76,6 +77,12 @@ class TournamentStore {
         }
 
         return null;
+    }
+
+    @computed
+    get tournamentResults(): Array<TeamResult> {
+        // Results will be fetched from server
+        return this.teams.map(t => new TeamResult(t, 0, 0, 0, 0));
     }
 
     getTeam(teamId: number): Team {

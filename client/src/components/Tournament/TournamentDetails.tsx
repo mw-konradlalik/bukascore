@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { observer } from 'mobx-react';
 import { Panel, Grid, Row, Col } from 'react-bootstrap'
-import ResultTable from './ResultTable';
+import ScoreBoard from './ScoreBoard';
 import { Route, Switch, RouteComponentProps } from 'react-router-dom'
 import { TournamentStore } from '../../Store';
 import MatcheResults from './MatchResults'
@@ -22,8 +22,8 @@ class TournamentDetails extends React.Component<RouteComponentProps<{ tournament
                     <Col md={6}><h1>Rozgrywki: {TournamentStore.gameForTournament ? TournamentStore.gameForTournament.name : ''} </h1></Col>
                 </Row>
                 <Row>
-                    <Col md={6}><ResultTable/></Col>
-                    <Col md={6}><MatcheResults matches={TournamentStore.recentMatches}/></Col>
+                    <Col md={6}><ScoreBoard results={TournamentStore.tournamentResults} /></Col>
+                    <Col md={6}><MatcheResults matches={TournamentStore.recentMatches} /></Col>
                 </Row>
             </Grid>
         );
@@ -38,7 +38,7 @@ class TournamentDetails extends React.Component<RouteComponentProps<{ tournament
 
 const TournamentRoute: React.SFC<RouteComponentProps<{}>> = ({ match }) => (
     <Switch>
-        <Route exact path={`${match.url}/:id`} component={TournamentDetails}></Route>
+        <Route exact path={`${match.url}/:tournamentId`} component={TournamentDetails}></Route>
     </Switch>
 );
 

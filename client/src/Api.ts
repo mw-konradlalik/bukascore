@@ -23,14 +23,22 @@ export class OrganisationApi {
 export class TournamentApi {
     getActiveTournaments(): Promise<Array<Tournament>> {
         return Promise.resolve([
-           new Tournament(1, 1, 'Sezon 2017', new Date(2017, 1, 1), new Date(2017, 12, 31), []),
-           new Tournament(2, 1, 'Sezon 2016', new Date(2016, 1, 1), new Date(2016, 12, 31), []),
-           new Tournament(3, 3, 'World Cup 2018', new Date(2018, 6, 1), new Date(2018, 7, 31), []) 
+            new Tournament(1, 1, 'Sezon 2017', new Date(2017, 1, 1), new Date(2017, 12, 31), []),
+            new Tournament(2, 1, 'Sezon 2016', new Date(2016, 1, 1), new Date(2016, 12, 31), []),
+            new Tournament(3, 3, 'World Cup 2018', new Date(2018, 6, 1), new Date(2018, 7, 31), [])
         ]);
     }
 
     getTournament(tournamentId: number): Promise<Tournament> {
         return Promise.resolve(new Tournament(1, 1, 'Sezon 2017', new Date(2017, 1, 1), new Date(2017, 12, 31), []))
+    }
+
+    getTournametsForGame(gameId: number): Promise<Array<Tournament>> {
+        return Promise.resolve([
+            new Tournament(1, 1, 'Liga buraczna 2015', new Date(2017, 1, 1), new Date(2017, 12, 31), []),
+            new Tournament(2, 1, 'Liga ogórkowa 2016', new Date(2016, 1, 1), new Date(2016, 12, 31), []),
+            new Tournament(3, 3, 'Puchar sołtysa Proszówek', new Date(2018, 6, 1), new Date(2018, 7, 31), [])
+        ]);
     }
 }
 

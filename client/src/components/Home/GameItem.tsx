@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Link } from 'react-router-dom'
 import Game from "../../models/Game";
 
 interface GameItemProps {
@@ -6,10 +7,12 @@ interface GameItemProps {
 }
 
 export default class GameItem extends React.Component<GameItemProps, {}>{
-    render(){
+    render() {
         return (
             <div>
-                {this.props.game.name}
+                <Link to={`/home/${this.props.game.id}`}>
+                    {this.props.game.name}
+                </Link>
             </div>
         );
     }
