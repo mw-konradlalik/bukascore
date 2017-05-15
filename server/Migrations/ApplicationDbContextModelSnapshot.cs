@@ -23,7 +23,11 @@ namespace bukascore.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int>("OrganisationId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OrganisationId");
 
                     b.ToTable("Games");
                 });
@@ -54,10 +58,24 @@ namespace bukascore.Migrations
                     b.ToTable("Matches");
                 });
 
+            modelBuilder.Entity("BukaScore.Models.Organisation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Organisation");
+                });
+
             modelBuilder.Entity("BukaScore.Models.Team", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int>("GameId");
 
                     b.Property<string>("Name");
 
@@ -84,6 +102,14 @@ namespace bukascore.Migrations
                     b.HasIndex("GameId");
 
                     b.ToTable("Tournaments");
+                });
+
+            modelBuilder.Entity("BukaScore.Models.Game", b =>
+                {
+                    b.HasOne("BukaScore.Models.Organisation", "Organisation")
+                        .WithMany("Games")
+                        .HasForeignKey("OrganisationId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("BukaScore.Models.Match", b =>
