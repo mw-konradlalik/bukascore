@@ -2,27 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using BukaScore.Dtos;
 using BukaScore.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BukaScore.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class OrganisationsController : Controller
     {
         private ApplicationDbContext dbContext;
+        private IMapper mapper;
 
-        public ValuesController(ApplicationDbContext dbContext)
+        public OrganisationsController(ApplicationDbContext dbContext, IMapper mapper)
         {
             this.dbContext = dbContext;
+            this.mapper = mapper;
         }
 
         // GET api/values
         [HttpGet]
-        public IList<Game> Get()
+        public IList<OrganisationDto> Get()
         {
-            //return new string[] { "value1", "value2", "value3", "value4" };
-            return dbContext.Games.ToList();
+            return mapper.Map<IList<OrganisationDto>>(dbContext.Organisations.Include(o => o.Games));
         }
 
         // GET api/values/5

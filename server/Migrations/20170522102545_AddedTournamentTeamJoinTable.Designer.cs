@@ -8,9 +8,10 @@ using BukaScore.Models;
 namespace bukascore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170522102545_AddedTournamentTeamJoinTable")]
+    partial class AddedTournamentTeamJoinTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -37,15 +38,15 @@ namespace bukascore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AwayId");
+                    b.Property<int?>("AwayId");
 
                     b.Property<int>("AwayScore");
 
-                    b.Property<int>("HomeId");
+                    b.Property<int?>("HomeId");
 
                     b.Property<int>("HomeScore");
 
-                    b.Property<int>("TournamentId");
+                    b.Property<int?>("TournamentId");
 
                     b.HasKey("Id");
 
@@ -89,13 +90,9 @@ namespace bukascore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("EndDate");
-
                     b.Property<int>("GameId");
 
                     b.Property<string>("Name");
-
-                    b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
 
@@ -137,8 +134,7 @@ namespace bukascore.Migrations
 
                     b.HasOne("BukaScore.Models.Tournament")
                         .WithMany("Matches")
-                        .HasForeignKey("TournamentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TournamentId");
                 });
 
             modelBuilder.Entity("BukaScore.Models.Tournament", b =>

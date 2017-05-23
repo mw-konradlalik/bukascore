@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using BukaScore.Models;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace BukaScore
 {
@@ -31,6 +32,8 @@ namespace BukaScore
         {
             // Add framework services.
             services.AddMvc();
+            services.AddCors();
+            services.AddAutoMapper(typeof(Startup));
 
             var connection = @"Server=(localdb)\mssqllocaldb;Database=BukaScore;Trusted_Connection=True;";
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
@@ -41,7 +44,8 @@ namespace BukaScore
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            
+            app.UseCors(builder => builder.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader());
             app.UseMvc();
         }
     }

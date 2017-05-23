@@ -8,9 +8,10 @@ using BukaScore.Models;
 namespace bukascore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170515101410_AddOrganisations")]
+    partial class AddOrganisations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -37,15 +38,15 @@ namespace bukascore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AwayId");
+                    b.Property<int?>("AwayId");
 
                     b.Property<int>("AwayScore");
 
-                    b.Property<int>("HomeId");
+                    b.Property<int?>("HomeId");
 
                     b.Property<int>("HomeScore");
 
-                    b.Property<int>("TournamentId");
+                    b.Property<int?>("TournamentId");
 
                     b.HasKey("Id");
 
@@ -67,7 +68,7 @@ namespace bukascore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organisations");
+                    b.ToTable("Organisation");
                 });
 
             modelBuilder.Entity("BukaScore.Models.Team", b =>
@@ -79,7 +80,11 @@ namespace bukascore.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int?>("TournamentId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TournamentId");
 
                     b.ToTable("Teams");
                 });
@@ -89,32 +94,15 @@ namespace bukascore.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<int>("GameId");
+                    b.Property<int?>("GameId");
 
                     b.Property<string>("Name");
-
-                    b.Property<DateTime>("StartDate");
 
                     b.HasKey("Id");
 
                     b.HasIndex("GameId");
 
                     b.ToTable("Tournaments");
-                });
-
-            modelBuilder.Entity("BukaScore.Models.TournamentTeam", b =>
-                {
-                    b.Property<int>("TournamentId");
-
-                    b.Property<int>("TeamId");
-
-                    b.HasKey("TournamentId", "TeamId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("TournamentTeam");
                 });
 
             modelBuilder.Entity("BukaScore.Models.Game", b =>
@@ -137,29 +125,21 @@ namespace bukascore.Migrations
 
                     b.HasOne("BukaScore.Models.Tournament")
                         .WithMany("Matches")
-                        .HasForeignKey("TournamentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TournamentId");
+                });
+
+            modelBuilder.Entity("BukaScore.Models.Team", b =>
+                {
+                    b.HasOne("BukaScore.Models.Tournament")
+                        .WithMany("Teams")
+                        .HasForeignKey("TournamentId");
                 });
 
             modelBuilder.Entity("BukaScore.Models.Tournament", b =>
                 {
                     b.HasOne("BukaScore.Models.Game")
                         .WithMany("Tournaments")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("BukaScore.Models.TournamentTeam", b =>
-                {
-                    b.HasOne("BukaScore.Models.Team", "Team")
-                        .WithMany("Tournaments")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("BukaScore.Models.Tournament", "Tournament")
-                        .WithMany("Teams")
-                        .HasForeignKey("TournamentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GameId");
                 });
         }
     }

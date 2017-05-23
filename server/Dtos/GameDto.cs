@@ -1,0 +1,9 @@
+
+namespace BukaScore.Dtos
+{
+    public class GameDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+}
