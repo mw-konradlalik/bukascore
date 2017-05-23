@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BukaScore.Common;
 using BukaScore.Dtos;
 using BukaScore.Models;
 using Microsoft.AspNetCore.Cors;
@@ -39,8 +40,21 @@ namespace BukaScore.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        public SaveResult<OrganisationDto> Post([FromBody]OrganisationDto organisation)
         {
+            var newOrg = new Organisation
+            {
+                Name = organisation.Name
+            };
+
+            var entry = dbContext.Organisations.Add(newOrg);
+            
+            dbContext.SaveChanges();
+
+            return new SaveResult<OrganisationDto>(){
+                SavedModel = mapper.Map<OrganisationDto>(entry.Entity),
+                Errors = new List<string>()
+            };
         }
 
         // PUT api/values/5
@@ -50,9 +64,14 @@ namespace BukaScore.Controllers
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{organisationId}")]
+        public RemoveResult Delete(int organisationId)
         {
+            var org = dbContext.Organisations.Single(x => x.Id == organisationId);
+            dbContext.Organisations.Remove(org);
+            dbContext.SaveChanges();
+
+            return new RemoveResult { Errors = new List<string>() };
         }
     }
 }
