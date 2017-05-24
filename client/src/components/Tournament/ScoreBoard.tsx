@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Table } from 'react-bootstrap'
-import TeamResult from '../../models/TeamResult';
+import TeamTournamentResult from '../../models/TeamTournamentResult';
 import ScoreBoardItem from './ScoreBoardItem';
 
 interface ScoreBoardProps {
-    results: Array<TeamResult>;
+    results: Array<TeamTournamentResult>;
 }
 
 const ScoreBoard : React.SFC<ScoreBoardProps> = ({ results }) => (
@@ -20,7 +20,7 @@ const ScoreBoard : React.SFC<ScoreBoardProps> = ({ results }) => (
             </tr>
         </thead>
         <tbody>
-            {results.map((result, index) => <ScoreBoardItem index={index+1} result={result} key={result.team.id} />)}
+            {results.map((result, index) => <ScoreBoardItem index={index+1} result={result} key={result.teamId} />)}
         </tbody>
     </Table>
 );

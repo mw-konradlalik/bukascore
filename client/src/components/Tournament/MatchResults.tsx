@@ -15,8 +15,8 @@ const MatchResults = observer<{ matches: Array<Match> }>(({ matches }) => (
         </thead>
         <tbody>
             {matches.map(m => <ResultItem key={m.id} match={m}
-                homeTeam={TournamentStore.teams.find(t => t.id == m.homeTeamId)}
-                awayTeam={TournamentStore.teams.find(t => t.id == m.awayTeamId)} />)}
+                homeTeamName={m.homeTeamName}
+                awayTeamName={m.awayTeamName} />)}
         </tbody>
 
     </Table>

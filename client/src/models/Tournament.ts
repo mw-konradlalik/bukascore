@@ -1,3 +1,5 @@
+import Team from './Team';
+
 export default class Tournament {
     constructor(
         public id: number,
@@ -5,6 +7,6 @@ export default class Tournament {
         public name: string,
         public startDate: Date,
         public endDate: Date, 
-        public teams: Array<number>
+        public teams: Array<Team>
     ) { }
 }

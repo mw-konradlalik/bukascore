@@ -48,10 +48,11 @@ namespace BukaScore.Controllers
             };
 
             var entry = dbContext.Organisations.Add(newOrg);
-            
+
             dbContext.SaveChanges();
 
-            return new SaveResult<OrganisationDto>(){
+            return new SaveResult<OrganisationDto>()
+            {
                 SavedModel = mapper.Map<OrganisationDto>(entry.Entity),
                 Errors = new List<string>()
             };
@@ -59,8 +60,25 @@ namespace BukaScore.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public IActionResult Update([FromBody]OrganisationDto organisation)
         {
+            var existingOrganisation = dbContext.Organisations.SingleOrDefault(org => org.Id == organisation.Id);
+
+            if (existingOrganisation != null)
+            {
+                existingOrganisation.Name = organisation.Name;
+            }
+            else
+            {
+                return NotFound(organisation);
+            }
+
+            dbContext.SaveChanges();
+
+            return Ok(new SaveResult<OrganisationDto>(){
+                SavedModel = mapper.Map<OrganisationDto>(existingOrganisation),
+                Errors = new List<string>()
+            });
         }
 
         // DELETE api/values/5

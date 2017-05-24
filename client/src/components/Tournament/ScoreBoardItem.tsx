@@ -1,17 +1,17 @@
 import * as React from 'react'
-import TeamResult from '../../models/TeamResult';
+import TeamTournamentResult from '../../models/TeamTournamentResult';
 
 interface ScoreBoardItemProps {
     index: number;
-    result: TeamResult;
+    result: TeamTournamentResult;
 }
 
 const ScoreBoardItem: React.SFC<ScoreBoardItemProps> = ({ index, result }) => (
     <tr>
         <td>{index}</td>
-        <td>{result.team.name}</td>
+        <td>{result.teamName}</td>
         <td>{result.wins}</td>
-        <td>{result.losses}</td>
+        <td>{result.looses}</td>
         <td>{result.draws}</td>
         <td>{result.points}</td>
     </tr>

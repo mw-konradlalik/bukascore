@@ -3,70 +3,91 @@ import Game from './models/Game';
 import Tournament from './models/Tournament';
 import Match from './models/Match';
 import Team from './models/Team';
+import TeamTournamentResult from './models/TeamTournamentResult';
+import {SaveResult, RemoveResult} from './common/ResponseResult';
+
+const baseApiUrl = 'http://localhost:5000/api'
 
 export class OrganisationApi {
     getOrganisations(): Promise<Array<Organisation>> {
-        return Promise.resolve([
-            new Organisation(1, 'PZPN', [
-                new Game(1, 'Ekstraklasa'),
-                new Game(2, 'Puchar Polski')
-            ]),
-            new Organisation(2, 'FIFA', [
-                new Game(3, 'World Cup'),
-                new Game(4, 'Confederations Cup'),
-                new Game(5, 'Club World Cup')
-            ])
-        ]);
+        return fetch(`${baseApiUrl}/organisations`)
+            .then(response => response.json() as Promise<Array<Organisation>>);
+    }
+
+    createNewOrganisation(organisation: Organisation): Promise<SaveResult<Organisation>> {
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+        return fetch(`${baseApiUrl}/organisations`, {
+            method: 'post',
+            body: JSON.stringify(organisation),
+            headers: headers
+        }).then(response => {
+            if (response.ok || response.status === 400) {
+                return response.json() as Promise<SaveResult<Organisation>>;
+            } else {
+                throw new Error(response.status.toString());
+            }
+        })
+    }
+
+    removeOrganisation(organisationId: number): Promise<RemoveResult> {
+        return fetch(`${baseApiUrl}/organisations/${organisationId}`, {
+            method: 'delete'
+        }).then(response => {
+            if(response.ok || response.status === 400) {
+                return response.json() as Promise<RemoveResult>;
+            } else {
+                throw new Error(response.status.toString());
+            }
+        })
+    }
+
+    editOrganisation(organisation: Organisation): Promise<SaveResult<Organisation>> {
+        return fetch(`${baseApiUrl}/organisations/${organisation.id}`, {
+            method: 'put'
+        }).then(response => {
+            if (response.ok || response.status === 400) {
+                return response.json() as Promise<SaveResult<Organisation>>
+            } else {
+                throw new Error(response.status.toString())
+            }
+        })
     }
 }
 
 export class TournamentApi {
+    readonly tournamentApiUrl = `${baseApiUrl}/tournaments`;
+
     getActiveTournaments(): Promise<Array<Tournament>> {
-        return Promise.resolve([
-            new Tournament(1, 1, 'Sezon 2017', new Date(2017, 1, 1), new Date(2017, 12, 31), []),
-            new Tournament(2, 1, 'Sezon 2016', new Date(2016, 1, 1), new Date(2016, 12, 31), []),
-            new Tournament(3, 3, 'World Cup 2018', new Date(2018, 6, 1), new Date(2018, 7, 31), [])
-        ]);
+        return fetch(`${this.tournamentApiUrl}/active`)
+            .then(response => response.json() as Promise<Array<Tournament>>);
     }
 
     getTournament(tournamentId: number): Promise<Tournament> {
-        return Promise.resolve(new Tournament(1, 1, 'Sezon 2017', new Date(2017, 1, 1), new Date(2017, 12, 31), []))
+        return fetch(`${this.tournamentApiUrl}/${tournamentId}`)
+            .then(response => response.json() as Promise<Tournament>);
     }
 
     getTournametsForGame(gameId: number): Promise<Array<Tournament>> {
-        return Promise.resolve([
-            new Tournament(1, 1, 'Liga buraczna 2015', new Date(2017, 1, 1), new Date(2017, 12, 31), []),
-            new Tournament(2, 1, 'Liga ogórkowa 2016', new Date(2016, 1, 1), new Date(2016, 12, 31), []),
-            new Tournament(3, 3, 'Puchar sołtysa Proszówek', new Date(2018, 6, 1), new Date(2018, 7, 31), [])
-        ]);
+        return fetch(`${baseApiUrl}/tournaments/game/${gameId}`)
+            .then(response => response.json() as Promise<Array<Tournament>>);
+    }
+
+    getTeamsTournamentResults(tournamentId: number): Promise<Array<TeamTournamentResult>> {
+        return fetch(`${this.tournamentApiUrl}/${tournamentId}/results`)
+            .then(response => response.json() as Promise<Array<TeamTournamentResult>>);
     }
 }
 
 export class MatchApi {
+    readonly matchesApiUrl = `${baseApiUrl}/matches`;
+
     getRecentMatches(tournamentId: number): Promise<Array<Match>> {
-        return Promise.resolve([
-            new Match(1, 1, 2, 2, 0),
-            new Match(2, 2, 1, 3, 0)
-        ]);
+        return fetch(`${this.matchesApiUrl}/tournament/${tournamentId}`)
+        .then(response => response.json() as Promise<Array<Match>>);
     }
 }
 
 export class TeamApi {
-    getTeamsForGame(gameId: number): Promise<Array<Team>> {
-        return Promise.resolve([
-            new Team(1, 'Wisła Kraków', 1),
-            new Team(2, 'Legia Warszawa', 1),
-            new Team(3, 'Sandecja Nowy Sącz', 1),
-            new Team(4, 'Arka Gdynia', 1)
-        ])
-    }
-
-    getTeamsForTournament(tournamentId: number): Promise<Array<Team>> {
-        return Promise.resolve([
-            new Team(1, 'Wisła Kraków', 1),
-            new Team(2, 'Legia Warszawa', 1),
-            new Team(3, 'Sandecja Nowy Sącz', 1),
-            new Team(4, 'Arka Gdynia', 1)
-        ])
-    }
 }

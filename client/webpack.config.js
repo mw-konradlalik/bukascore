@@ -13,6 +13,9 @@ module.exports = {
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),
         historyApiFallback: true
+        // headers: {
+        //     'Access-Control-Allow-Origin': '*',
+        // }
     },
 
     // Enable sourcemaps for debugging webpack's output.
@@ -26,7 +29,7 @@ module.exports = {
     module: {
         rules: [
             // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-            { test: /\.tsx?$/, loaders: [ 'awesome-typescript-loader'] },
+            { test: /\.tsx?$/, loaders: ['awesome-typescript-loader'] },
             { test: /(\.css)$/, loaders: ['style-loader', 'css-loader'] },
             { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader' },
             { test: /\.(woff|woff2)$/, loader: 'url-loader?prefix=font/&limit=5000' },
@@ -43,8 +46,8 @@ module.exports = {
             template: './index.html'
         }),
         new webpack.ProvidePlugin({
-           $: "jquery",
-           jQuery: "jquery"
-       })
+            $: "jquery",
+            jQuery: "jquery"
+        })
     ],
 };

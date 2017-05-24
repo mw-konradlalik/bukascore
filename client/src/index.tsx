@@ -9,7 +9,7 @@ import TournamentDetails from './components/Tournament/TournamentDetails';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import '../node_modules/bootstrap/dist/js/bootstrap.min.js';
 
-useStrict(true);
+//useStrict(true);
 
 const headerStyle = {
     height: "50px"
@@ -21,8 +21,8 @@ const Index = () => (
             <div style={headerStyle}></div>
 
             <Switch>
-                <Route path="/" component={Home} />
                 <Route path="/tournament" component={TournamentDetails} />
+                <Route path="/" component={Home} />
             </Switch>
             <DevTools />
         </div>

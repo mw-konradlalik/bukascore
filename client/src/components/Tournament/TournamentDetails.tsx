@@ -22,7 +22,7 @@ class TournamentDetails extends React.Component<RouteComponentProps<{ tournament
                     <Col md={6}><h1>Rozgrywki: {TournamentStore.gameForTournament ? TournamentStore.gameForTournament.name : ''} </h1></Col>
                 </Row>
                 <Row>
-                    <Col md={6}><ScoreBoard results={TournamentStore.tournamentResults} /></Col>
+                    <Col md={6}><ScoreBoard results={TournamentStore.teamsTournamentResults} /></Col>
                     <Col md={6}><MatcheResults matches={TournamentStore.recentMatches} /></Col>
                 </Row>
             </Grid>
@@ -31,7 +31,7 @@ class TournamentDetails extends React.Component<RouteComponentProps<{ tournament
 
     render() {
         return (
-            TournamentStore.currentTournament !== null ? this.renderTournamentDetails() : <div>Loading</div>
+            TournamentStore.currentTournament ? this.renderTournamentDetails() : <div>Loading</div>
         )
     }
 }
