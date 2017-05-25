@@ -4,6 +4,7 @@ import Organisation from '../../models/Organisation';
 import Store from '../../Store';
 import { OrganisationsState } from '../../State';
 import OrganisationItem from './OrganisationItem'
+import CreateInput from '../Form/CreateInput'
 import { Accordion, Panel, Button, Glyphicon, Well, Form, FormControl, FormGroup, ControlLabel, InputGroup, FormControlProps } from 'react-bootstrap';
 
 @observer
@@ -35,20 +36,12 @@ export default class OrganisationList extends React.Component<{}, {}>{
         return (
             <Form>
                 <FormGroup>
-                    <InputGroup>
-                        <InputGroup.Addon>Organisation name</InputGroup.Addon>
-                        <FormControl type='text'
-                            name='newOrganisationName'
-                            value={this._organisationState.newOrganisationName}
-                            onChange={e => this.onAddNewOrganisationFormChange(e as any)} >
-                        </FormControl>
-                        <InputGroup.Button>
-                            <Button onClick={this._organisationState.saveNewOrganisation}><Glyphicon glyph="ok" /></Button>
-                            <Button onClick={this._organisationState.hideNewOrganisationForm}>
-                                <Glyphicon glyph="remove" />
-                            </Button>
-                        </InputGroup.Button>
-                    </InputGroup>
+                    <CreateInput 
+                    label="Organisation Name" 
+                    value={this._organisationState.newOrganisationName}
+                    onChange={e => this.onAddNewOrganisationFormChange(e as any)}
+                    onSaveClick={this._organisationState.saveNewOrganisation}
+                    onCancelClick={this._organisationState.hideNewOrganisationForm}/>
                 </FormGroup>
             </Form>
         )

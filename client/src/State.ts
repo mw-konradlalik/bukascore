@@ -1,8 +1,10 @@
 import Tournament from './models/Tournament'
-import { observable, action, computed } from 'mobx'
-import { TournamentApi, OrganisationApi } from './Api'
-import Store from './Store';
 import Organisation from './models/Organisation';
+import Game from './models/Game'
+import { observable, action, computed } from 'mobx'
+import { TournamentApi, OrganisationApi, GameApi } from './Api'
+import Store from './Store';
+
 
 export class HomeState {
 
@@ -99,18 +101,20 @@ export class OrganisationsState {
 
     editOrganisation(organisation: Organisation) {
         this._organisationApi.editOrganisation(organisation)
-        .then(result => {
-            if (result.errors.length === 0){
-                Store.refresh();
-            } else {
+            .then(result => {
+                if (result.errors.length === 0) {
+                    Store.refresh();
+                } else {
                     this.validationErrors = result.errors;
                     alert(result.errors.join('\n'));
                 }
-            }).catch(e => alert(e)); 
+            }).catch(e => alert(e));
     }
 }
 
 export class OrganisationState {
+    private readonly _organisationApi: OrganisationApi = new OrganisationApi();
+
     constructor(organisation: Organisation) {
         this.organisation = organisation;
     }
@@ -118,25 +122,68 @@ export class OrganisationState {
     @observable
     public organisation: Organisation;
 
-    //@observable
-    //public organisationName: string = ''
-
     @observable
     public isEditable: boolean = false;
 
     @action.bound
-    cancelEdit() {
+    saveOrganisation(organisationName: string) {
+        let updatedOrganisation = Object.assign({}, this.organisation);
+        updatedOrganisation.name = organisationName;
 
+        this._organisationApi.editOrganisation(updatedOrganisation)
+            .then(result => {
+                if (result.errors.length === 0) {
+                    this.organisation.name = result.savedModel.name;
+                    this.makeEditable(false);
+                } else {
+                    alert(result.errors.join('\n'));
+                }
+            }).catch(e => alert(e));
     }
 
     @action.bound
-    setOrganisationName(name: string) {
-        //this.organisationName = name;
-        this.organisation.name = name;
+    makeEditable(editable: boolean) {
+        this.isEditable = editable;
+    }
+}
+
+export class GameListState {
+    private _gameApi = new GameApi();
+
+    @observable
+    public newGameName: string = '';
+
+    @observable
+    public showNewGameForm: boolean = false;
+
+    @action.bound
+    setNewGameName(name: string) {
+        this.newGameName = name;
     }
 
     @action.bound
-    makeEditable() {
-        this.isEditable = true;
+    saveNewGame(organisationId: number) {
+        const newGame = new Game(this.newGameName, organisationId);
+        this._gameApi.createNewGame(newGame)
+            .then(result => {
+                if (result.errors.length === 0) {
+                    const parent = Store.organisations.find(o => o.id === result.savedModel.organisationId);
+                    parent.games.push(result.savedModel);
+                    this.closeNewGameForm();
+                } else {
+                    alert(result.errors.join('\n'));
+                }
+            })
+    }
+
+    @action.bound
+    closeNewGameForm() {
+        this.newGameName = '';
+        this.showNewGameForm = false;
+    }
+
+    @action.bound
+    displayNewGameForm() {
+        this.showNewGameForm = true;
     }
 }

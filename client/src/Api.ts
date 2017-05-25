@@ -8,6 +8,10 @@ import {SaveResult, RemoveResult} from './common/ResponseResult';
 
 const baseApiUrl = 'http://localhost:5000/api'
 
+const jsonHeaders = new Headers();
+jsonHeaders.append('Content-Type', 'application/json');
+
+
 export class OrganisationApi {
     getOrganisations(): Promise<Array<Organisation>> {
         return fetch(`${baseApiUrl}/organisations`)
@@ -15,13 +19,11 @@ export class OrganisationApi {
     }
 
     createNewOrganisation(organisation: Organisation): Promise<SaveResult<Organisation>> {
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
 
         return fetch(`${baseApiUrl}/organisations`, {
             method: 'post',
             body: JSON.stringify(organisation),
-            headers: headers
+            headers: jsonHeaders
         }).then(response => {
             if (response.ok || response.status === 400) {
                 return response.json() as Promise<SaveResult<Organisation>>;
@@ -45,12 +47,32 @@ export class OrganisationApi {
 
     editOrganisation(organisation: Organisation): Promise<SaveResult<Organisation>> {
         return fetch(`${baseApiUrl}/organisations/${organisation.id}`, {
-            method: 'put'
+            method: 'put',
+            body: JSON.stringify(organisation),
+            headers: jsonHeaders
         }).then(response => {
             if (response.ok || response.status === 400) {
                 return response.json() as Promise<SaveResult<Organisation>>
             } else {
                 throw new Error(response.status.toString())
+            }
+        })
+    }
+}
+
+export class GameApi {
+    readonly gameApiUrl = `${baseApiUrl}/games`;
+
+    createNewGame(game: Game): Promise<SaveResult<Game>> {
+        return fetch(`${this.gameApiUrl}`, {
+            method: 'post',
+            body: JSON.stringify(game),
+            headers: jsonHeaders
+        }).then(response => {
+            if(response.ok || response.status === 400) {
+                return response.json() as Promise<SaveResult<Game>>
+            } else {
+                throw new Error(response.status.toString());
             }
         })
     }

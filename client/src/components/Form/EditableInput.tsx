@@ -1,18 +1,17 @@
 import * as React from 'react'
 import { Form, FormGroup, FormControl, Button, Glyphicon, InputGroup } from 'react-bootstrap'
 
+type ValueType = object | string | number | Date;
+
 interface EditableInputProps {
     isEditable: boolean,
-    value: any,
-    //onChange: (event: any) => void
-    onSave: (event: any, newValue: any) => void,
-    onCancel: (event: any) => void
+    value: ValueType,
+    onSaveClick: (event: any, newValue: any) => void,
+    onCancelClick: (event: any) => void
 }
 
 interface EditableInputState {
-
-
-    valueCopy: any;
+    valueCopy: ValueType;
 }
 
 class EditableInput extends React.Component<EditableInputProps, EditableInputState> {
@@ -20,27 +19,43 @@ class EditableInput extends React.Component<EditableInputProps, EditableInputSta
         super(props);
 
         this.state = {
-            valueCopy: props.value.slice()
+            valueCopy: EditableInput.createValueCopy(props.value)
         }
 
         this.onChange = this.onChange.bind(this);
     }
 
-    onChange(event: any) {
+    static createValueCopy(value: ValueType): ValueType {
+        let valueCopy: ValueType = value;
+
+        if (typeof value === 'string') {
+            valueCopy = value.slice();
+        } else if (typeof value === 'object') {
+            valueCopy = Object.assign({}, value);
+        } 
+
+        return valueCopy;
+    }
+
+    onChange(event: any) {      
         this.setState({
-            valueCopy: event.target.value
+            valueCopy: EditableInput.createValueCopy(event.target.value)
         })
     }
 
     render() {
 
-        const { isEditable, value, onSave, onCancel } = this.props;
+        const { isEditable, value, onSaveClick, onCancelClick } = this.props;
 
         return (
             <div>
                 {
                     isEditable
-                        ? <DynamicValue value={this.state.valueCopy} onChange={this.onChange} onSave={onSave} onCancel={onCancel} />
+                        ? <DynamicValue
+                            value={this.state.valueCopy}
+                            onChange={this.onChange}
+                            onSaveClick={onSaveClick}
+                            onCancelClick={onCancelClick} />
                         : <StaticValue value={value} />
                 }
             </div>
@@ -57,18 +72,18 @@ const StaticValue: React.SFC<{ value: any }> = ({ value }) => (
 const DynamicValue: React.SFC<{
     value: any,
     onChange: (event: any) => void,
-    onSave: (event: any, newValue: any) => void,
-    onCancel: (event: any) => void
+    onSaveClick: (event: any, newValue: any) => void,
+    onCancelClick: (event: any) => void
 }>
-    = ({ value, onChange, onSave, onCancel }) => (
+    = ({ value, onChange, onSaveClick, onCancelClick }) => (
         <InputGroup>
             <FormControl type='text' autoFocus={true}
                 value={value}
                 onChange={onChange} >
             </FormControl>
             <InputGroup.Button>
-                <Button onClick={(e) => { onSave(e, value) }}><Glyphicon glyph="ok" /></Button>
-                <Button onClick={onCancel}>
+                <Button onClick={(e) => { onSaveClick(e, value) }}><Glyphicon glyph="ok" /></Button>
+                <Button onClick={onCancelClick}>
                     <Glyphicon glyph="share-alt" />
                 </Button>
             </InputGroup.Button>
