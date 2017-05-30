@@ -37,6 +37,14 @@ class EditableInput extends React.Component<EditableInputProps, EditableInputSta
         return valueCopy;
     }
 
+    componentWillReceiveProps(newProps: EditableInputProps) {
+        if (newProps.value !== this.props.value) {
+            this.setState({
+                valueCopy: EditableInput.createValueCopy(newProps.value)
+            })
+        }
+    }
+
     onChange(event: any) {      
         this.setState({
             valueCopy: EditableInput.createValueCopy(event.target.value)

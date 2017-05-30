@@ -187,3 +187,24 @@ export class GameListState {
         this.showNewGameForm = true;
     }
 }
+export class GameState{
+    private _tournamentApi = new TournamentApi();
+
+    @computed
+    public get game(): Game {
+        return Store.getGame(this.gameId)    
+    }
+
+    @observable
+    public gameId: number;
+
+    @observable
+    public tournaments: Array<Tournament> = [];
+
+    @action.bound
+    setGame(gameId: number){
+        this.gameId = gameId;
+        this._tournamentApi.getTournametsForGame(this.gameId)
+        .then(t => this.tournaments = t);
+    }
+}

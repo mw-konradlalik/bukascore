@@ -1,4 +1,4 @@
-import { observable, computed, autorun, action, whyRun } from "mobx";
+import { observable, computed, autorun, action, whyRun, IObservableArray } from "mobx";
 import { OrganisationApi, TournamentApi, MatchApi, TeamApi } from "./Api";
 import Organisation from './models/Organisation';
 import Game from './models/Game';
@@ -25,10 +25,10 @@ class Store {
         autorun(() => {
             let games: Array<Game> = [];
             this.organisations.forEach(o => {
-                games = games.concat(o.games);
+                games = games.concat(o.games.slice());
             });      
 
-            this.games = games;      
+            this.games = games;    
         });
     }
 

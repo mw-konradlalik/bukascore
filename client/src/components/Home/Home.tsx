@@ -2,12 +2,11 @@ import * as React from "react";
 import { observer } from 'mobx-react'
 import OrganisationList from "./OrganisationList"
 import TournamentList from './TournamentList';
+import GameDetails from '../Game/GameDetails';
 import HomeStore from '../../Store';
 import { HomeState } from '../../State';
 import { RouteComponentProps, Switch, Route } from 'react-router-dom';
 
-// 'HelloProps' describes the shape of props.
-// State is never set so we use the 'undefined' type.
 @observer
 class Home extends React.Component<RouteComponentProps<{ gameId?: string }>, undefined> {
     private _homeState: HomeState = new HomeState();
@@ -23,6 +22,10 @@ class Home extends React.Component<RouteComponentProps<{ gameId?: string }>, und
     }
 
     render() {
+
+        const TournamentListComponent = <TournamentList tournaments={this._homeState.tournaments} 
+                                                        header={this._homeState.tournamentListHeader} />;
+
         return (
             <div className="container-fluid">
                 <div className="row">
@@ -30,18 +33,15 @@ class Home extends React.Component<RouteComponentProps<{ gameId?: string }>, und
                         <OrganisationList />
                     </div>
                     <div className="col-md-6">
-                        <TournamentList tournaments={this._homeState.tournaments} header={this._homeState.tournamentListHeader} />
+                        <Switch>
+                            <Route exact path="/" render={() => TournamentListComponent } ></Route>
+                            <Route exact path={`/home/:gameId`} component={GameDetails}></Route>
+                        </Switch>
+
                     </div>
                 </div>
             </div>);
     }
 }
 
-const HomeRoute: React.SFC<RouteComponentProps<{}>> = ({ match }) => (
-    <Switch>
-        <Route exact path="/" component={Home}></Route>
-        <Route exact path={`/home/:gameId`} component={Home}></Route>
-    </Switch>
-)
-
-export default HomeRoute;
+export default Home;
